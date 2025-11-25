@@ -217,7 +217,16 @@ const DetailedAudit = ({ data }) => {
                         {mobile.passedAudits.slice(0, 12).map((audit, index) => (
                             <div key={index} className="passed-item">
                                 <CheckCircle size={16} color="#10b981" />
-                                <span>{audit}</span>
+                                <span>
+                                    {typeof audit === 'object' && audit.title ? (
+                                        <>
+                                            <strong>{audit.title}</strong>
+                                            {audit.explanation && <span className="audit-explanation"> : {audit.explanation}</span>}
+                                        </>
+                                    ) : (
+                                        audit
+                                    )}
+                                </span>
                             </div>
                         ))}
                     </div>
