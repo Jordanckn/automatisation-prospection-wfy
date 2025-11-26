@@ -105,19 +105,61 @@ L'équipe WebFitYou
 Vous ne souhaitez plus recevoir ces emails ? <a href="${unsubscribeLink}" style="color: #6b7280; text-decoration: underline; font-size: 12px;">Se désinscrire</a>`;
     };
 
+    // Fonction pour générer la version HTML complète pour l'envoi
+    const generateHtmlMessage = () => {
+        const textMessage = generateEmailMessage();
+
+        // Convertir le texte en HTML avec sauts de ligne
+        let html = textMessage.replace(/\n/g, '<br>');
+
+        // Envelopper dans un HTML complet
+        return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: #2563eb;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    ${html}
+</body>
+</html>`;
+    };
+
     // Fonction pour générer la version texte lisible pour la prévisualisation
     const generatePreviewMessage = () => {
         const message = generateEmailMessage();
         // Remplacer les liens HTML par du texte lisible
         return message
-            .replace(/<a href="mailto:[^"]+"\s+style="[^"]+">cliquez ici<\/a>/g, 'webfityou@gmail.com')
-            .replace(/<a href="mailto:[^"]+"\s+style="[^"]+">Se désinscrire<\/a>/g, 'webfityou@gmail.com');
+            .replace(/<a href="[^"]+">([^<]+)<\/a>/g, '$1');
     };
 
     const [emailData, setEmailData] = useState({
         to: prospectData?.email || '',
         subject: `Audit SEO & Performance - ${prospectData?.name || 'Votre site'}`,
-        message: generateEmailMessage(),
+        message: generateHtmlMessage(),
         previewMessage: generatePreviewMessage()
     });
 
@@ -125,7 +167,7 @@ Vous ne souhaitez plus recevoir ces emails ? <a href="${unsubscribeLink}" style=
     React.useEffect(() => {
         setEmailData(prev => ({
             ...prev,
-            message: generateEmailMessage(),
+            message: generateHtmlMessage(),
             previewMessage: generatePreviewMessage()
         }));
     }, [sendOptions.sendHtml, sendOptions.sendPdf, sendOptions.template, prospectData?.name]);
@@ -148,10 +190,10 @@ Vous ne souhaitez plus recevoir ces emails ? <a href="${unsubscribeLink}" style=
                 body: JSON.stringify({
                     to: emailData.to,
                     subject: emailData.subject,
-                    text: emailData.message,
-                    // Envoyer le HTML si option HTML cochée OU si PDF demandé (pour générer le PDF)
+                    text: emailData.message, // Envoyer le HTML complet généré
+                    // Envoyer le HTML du rapport si option HTML cochée OU si PDF demandé
                     html: (sendOptions.sendHtml || sendOptions.sendPdf) ? htmlContent : null,
-                    // Si seulement PDF (pas HTML), ne pas afficher le HTML dans l'email
+                    // Si seulement PDF (pas HTML), ne pas afficher le rapport HTML dans l'email (mais le message d'accompagnement sera en HTML)
                     htmlInBody: sendOptions.sendHtml,
                     generatePdf: sendOptions.sendPdf,
                     prospectName: prospectData?.name || 'Audit'

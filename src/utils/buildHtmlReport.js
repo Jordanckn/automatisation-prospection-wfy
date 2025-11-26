@@ -136,26 +136,36 @@ export const buildHtmlReport = (data, prospect) => {
           <tr>
             <td style="padding: 30px;">
               <h2 style="margin: 0 0 20px; font-size: 18px; font-weight: 600; color: #111827; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">
-                📱 Scores Mobile
+                📱 Scores Smartphone
               </h2>
               
               <table width="100%" cellpadding="15" cellspacing="0" border="0">
                 <tr>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(mobile.categories.performance.score, mobile.categories.performance.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">Performance</div>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(mobile.performance.score, mobile.performance.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">Performance</div>
+                    </div>
                   </td>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(mobile.categories.accessibility.score, mobile.categories.accessibility.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">Accessibilité</div>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(mobile.seo.score, mobile.seo.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">SEO</div>
+                    </div>
                   </td>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(mobile.categories.bestPractices.score, mobile.categories.bestPractices.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">Pratiques</div>
+                </tr>
+                <tr>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(mobile.accessibility.score, mobile.accessibility.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">Accessibilité</div>
+                    </div>
                   </td>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(mobile.categories.seo.score, mobile.categories.seo.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">SEO</div>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(mobile.bestPractices.score, mobile.bestPractices.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">Bonnes Pratiques</div>
+                    </div>
                   </td>
                 </tr>
               </table>
@@ -166,26 +176,36 @@ export const buildHtmlReport = (data, prospect) => {
           <tr>
             <td style="padding: 0 30px 30px;">
               <h2 style="margin: 0 0 20px; font-size: 18px; font-weight: 600; color: #111827; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">
-                💻 Scores Desktop
+                💻 Scores Ordinateur
               </h2>
               
               <table width="100%" cellpadding="15" cellspacing="0" border="0">
                 <tr>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(desktop.categories.performance.score, desktop.categories.performance.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">Performance</div>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(desktop.performance.score, desktop.performance.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">Performance</div>
+                    </div>
                   </td>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(desktop.categories.accessibility.score, desktop.categories.accessibility.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">Accessibilité</div>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(desktop.seo.score, desktop.seo.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">SEO</div>
+                    </div>
                   </td>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(desktop.categories.bestPractices.score, desktop.categories.bestPractices.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">Pratiques</div>
+                </tr>
+                <tr>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(desktop.accessibility.score, desktop.accessibility.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">Accessibilité</div>
+                    </div>
                   </td>
-                  <td width="25%" align="center" style="padding: 10px;">
-                    ${createGmailGauge(desktop.categories.seo.score, desktop.categories.seo.color)}
-                    <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; font-weight: 600;">SEO</div>
+                  <td width="50%" align="center" valign="top">
+                    <div class="gauge-container">
+                      ${createGmailGauge(desktop.bestPractices.score, desktop.bestPractices.color)}
+                      <div style="margin-top: 10px; font-weight: 600; color: #374151;">Bonnes Pratiques</div>
+                    </div>
                   </td>
                 </tr>
               </table>

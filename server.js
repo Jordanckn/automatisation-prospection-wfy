@@ -165,19 +165,15 @@ function textToSimpleHtml(text) {
     // Remplacer les sauts de ligne par des <br>
     let html = text.replace(/\n/g, '<br>');
 
-    // Convertir les patterns "Discutons-en : mailto:..." en lien cliquable
-    html = html.replace(/Discutons-en\s*:\s*mailto:([^\s<]+)/gi, (match, url) => {
-        return `<a href="mailto:${url}" style="color: #3b82f6; text-decoration: underline; font-weight: 600;">Discutons-en</a>`;
+    // Convertir les marqueurs spéciaux en liens cliquables
+    // Marqueur pour "Discutons-en"
+    html = html.replace(/\{\{MEETING_LINK:(mailto:[^\}]+)\}\}/g, (match, url) => {
+        return `<a href="${url}" style="color: #3b82f6; text-decoration: underline; font-weight: 600;">Discutons-en</a>`;
     });
 
-    // Convertir les patterns "Se désinscrire : mailto:..." en lien cliquable
-    html = html.replace(/Se désinscrire\s*:\s*mailto:([^\s<]+)/gi, (match, url) => {
-        return `<a href="mailto:${url}" style="color: #6b7280; text-decoration: underline; font-size: 12px;">Se désinscrire</a>`;
-    });
-
-    // Convertir les autres liens mailto: restants en liens cliquables
-    html = html.replace(/mailto:([^\s<]+)/g, (match, url) => {
-        return `<a href="mailto:${url}" style="color: #3b82f6; text-decoration: underline;">Contactez-nous</a>`;
+    // Marqueur pour "Se désinscrire"
+    html = html.replace(/\{\{UNSUBSCRIBE_LINK:(mailto:[^\}]+)\}\}/g, (match, url) => {
+        return `<a href="${url}" style="color: #6b7280; text-decoration: underline; font-size: 12px;">Se désinscrire</a>`;
     });
 
     // Convertir les URLs http/https en liens cliquables
@@ -239,14 +235,51 @@ app.post('/send-email', async (req, res) => {
         return res.status(400).json({ error: 'Destinataire et objet requis' });
     }
 
+    // Préparer le contenu HTML final
+    let finalHtml;
+
+    if (htmlInBody) {
+        // Si on doit inclure le rapport dans le corps
+        if (text && text.includes('<html')) {
+            // Si le message d'accompagnement est du HTML complet, on extrait son body
+            const messageBodyMatch = text.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+            const messageBody = messageBodyMatch ? messageBodyMatch[1] : text;
+
+            // On insère le message d'accompagnement au début du body du rapport
+            // On suppose que le rapport (html) a aussi une structure HTML complète
+            if (html.includes('<body')) {
+                finalHtml = html.replace(/<body[^>]*>/i, (match) => {
+                    return `${match}\n<div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">${messageBody}</div>\n<hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 20px 0;">\n`;
+                });
+            } else {
+                // Fallback si le rapport n'a pas de body (peu probable)
+                finalHtml = `<div>${messageBody}</div><hr>${html}`;
+            }
+        } else {
+            // Si le message n'est pas HTML (ne devrait pas arriver avec les modifs récentes), on le convertit
+            const simpleHtmlMsg = textToSimpleHtml(text);
+            const messageBodyMatch = simpleHtmlMsg.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+            const messageBody = messageBodyMatch ? messageBodyMatch[1] : simpleHtmlMsg;
+
+            if (html.includes('<body')) {
+                finalHtml = html.replace(/<body[^>]*>/i, (match) => {
+                    return `${match}\n<div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">${messageBody}</div>\n<hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 20px 0;">\n`;
+                });
+            } else {
+                finalHtml = `<div>${messageBody}</div><hr>${html}`;
+            }
+        }
+    } else {
+        // Sinon on utilise juste le message d'accompagnement (qui est déjà du HTML complet)
+        finalHtml = text;
+    }
+
     const mailOptions = {
         from: `WebFitYou <${process.env.GMAIL_USER}>`,
         to: to,
         subject: subject,
-        text: text,
-        // Si HTML dans le corps, afficher le rapport complet
-        // Sinon, convertir le texte en HTML simple pour les liens cliquables
-        html: htmlInBody ? html : textToSimpleHtml(text),
+        text: text.replace(/<[^>]+>/g, ''), // Version texte brut (sans HTML)
+        html: finalHtml,
         attachments: []
     };
 

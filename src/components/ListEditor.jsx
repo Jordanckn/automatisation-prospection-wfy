@@ -193,49 +193,79 @@ const CampaignModal = ({ list, prospects, onClose }) => {
                 businessContext = 'Votre présence en ligne est déterminante pour attirer de nouveaux clients. Votre site pourrait générer bien plus de demandes qualifiées qu\'actuellement.';
             }
 
-            return `${title},
+            const htmlMessage = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; }
+        a { color: #3b82f6; text-decoration: underline; }
+        a:hover { color: #2563eb; }
+    </style>
+</head>
+<body>
+${title},<br><br>
 
-Nous avons analysé votre site web ${url} et au vu des résultats en pièce jointe, je me suis dit que cela valait le coup de vous contacter.
+Nous avons analysé votre site web ${url} et au vu des résultats en pièce jointe, je me suis dit que cela valait le coup de vous contacter.<br><br>
 
-${businessContext}
+${businessContext}<br><br>
 
-Chez WebFitYou, nous aidons des professionnels comme vous à devenir visibles partout où leurs ${clientTerm} cherchent :
-• En première page sur Google
-• Dans les réponses des IA (ChatGPT, Gemini…)
-• Via des contenus optimisés et convaincants
+Chez WebFitYou, nous aidons des professionnels comme vous à devenir visibles partout où leurs ${clientTerm} cherchent :<br>
+• En première page sur Google<br>
+• Dans les réponses des IA (ChatGPT, Gemini…)<br>
+• Via des contenus optimisés et convaincants<br><br>
 
-L'objectif : transformer votre site web en un levier d'acquisition de ${acquisitionTerm}.
+L'objectif : transformer votre site web en un levier d'acquisition de ${acquisitionTerm}.<br><br>
 
-Les conclusions de l'audit sont ci-jointes. Si vous le souhaitez, je peux vous présenter les optimisations prioritaires à mettre en place et l'impact concret sur votre activité.
+Les conclusions de l'audit sont ci-jointes. Si vous le souhaitez, je peux vous présenter les optimisations prioritaires à mettre en place et l'impact concret sur votre activité.<br><br>
 
-Discutons-en : <a href="${meetingLink}" style="color: #3b82f6; text-decoration: underline;">cliquez ici</a>
+Discutons-en : <a href="${meetingLink}" style="color: #3b82f6; text-decoration: underline;">cliquez ici</a><br><br>
 
-Bien à vous,
-L'équipe WebFitYou
-🌐 www.webfityou.com
+Bien à vous,<br>
+L'équipe WebFitYou<br>
+🌐 www.webfityou.com<br><br>
 
----
-Vous ne souhaitez plus recevoir ces emails ? Se désinscrire : ${unsubscribeLink}`;
+---<br>
+Vous ne souhaitez plus recevoir ces emails ? <a href="${unsubscribeLink}" style="color: #6b7280; text-decoration: underline; font-size: 12px;">Se désinscrire</a>
+</body>
+</html>`;
+            return htmlMessage;
         }
 
         // Template standard
-        return `Bonjour ${name},
+        const htmlMessage = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; }
+        a { color: #3b82f6; text-decoration: underline; }
+        a:hover { color: #2563eb; }
+    </style>
+</head>
+<body>
+Bonjour ${name},<br><br>
 
-Suite à notre échange, je vous envoie le rapport d'audit SEO et performance de votre site ${url}.
+Suite à notre échange, je vous envoie le rapport d'audit SEO et performance de votre site ${url}.<br><br>
 
-Ce rapport détaillé vous présente :
-• Les points forts de votre site
-• Les axes d'amélioration prioritaires
-• Des recommandations concrètes pour optimiser votre visibilité
+Ce rapport détaillé vous présente :<br>
+• Les points forts de votre site<br>
+• Les axes d'amélioration prioritaires<br>
+• Des recommandations concrètes pour optimiser votre visibilité<br><br>
 
-N'hésitez pas à me contacter si vous avez des questions.
+N'hésitez pas à me contacter si vous avez des questions.<br><br>
 
-Cordialement,
-L'équipe WebFitYou
-🌐 www.webfityou.com
+Cordialement,<br>
+L'équipe WebFitYou<br>
+🌐 www.webfityou.com<br><br>
 
----
-Vous ne souhaitez plus recevoir ces emails ? <a href="${unsubscribeLink}" style="color: #6b7280; text-decoration: underline; font-size: 12px;">Se désinscrire</a>`;
+---<br>
+Vous ne souhaitez plus recevoir ces emails ? <a href="${unsubscribeLink}" style="color: #6b7280; text-decoration: underline; font-size: 12px;">Se désinscrire</a>
+</body>
+</html>`;
+        return htmlMessage;
     };
 
     const startCampaign = async () => {
@@ -518,9 +548,21 @@ Vous ne souhaitez plus recevoir ces emails ? <a href="${unsubscribeLink}" style=
                             </button>
                         </>
                     ) : sendStatus.length === prospects.length ? (
-                        <button onClick={onClose} className="btn-success btn-block">
-                            Terminé - Fermer
-                        </button>
+                        <>
+                            <button
+                                onClick={() => {
+                                    setSendStatus([]);
+                                    setIsSending(false);
+                                }}
+                                className="btn-secondary"
+                                style={{ marginRight: '10px' }}
+                            >
+                                Nouvelle campagne
+                            </button>
+                            <button onClick={onClose} className="btn-success">
+                                Terminé - Fermer
+                            </button>
+                        </>
                     ) : null}
                 </div>
             </div>
